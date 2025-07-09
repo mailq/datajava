@@ -35,7 +35,7 @@ public class HelloDatastar {
                                     .replaceOuterHtml());
                     if (!ok)
                         break;
-                    Thread.sleep(signals.get("delay").asLong());
+                    Thread.sleep(signals.getJsonNumber("delay").longValue());
                 }
                 emitter.complete();
             } catch (InterruptedException e) {

@@ -12,7 +12,7 @@ Just copy the `Datastar.java` into your project for core functionality. It allow
 
 If you use JAX-RS according to JSR 311 (from back in 2008), and want to run your code in any Java EE compliant servlet container then you also copy the `JaxRsDatastar.java` and everything else will be handled by the application server like Wildfly, Jetty, Tomcat, Micronaut, Quarkus, ...
 
-Example usage
+Example usage:
 ```java
 public class HelloWorldResource {
     @GET
@@ -50,6 +50,40 @@ var jsonAsString = Json.createObjectBuilder()
 * Needs JSON (JSON-B or JSON-P) support; should be alredy included
 * Build-in Datastar signals converter
 * No build tool required
+* Copy&Paste. No CD/CI or central code registries.
+* No configuration. "Just works"
+
+## Spring Boot integration
+
+If you are in the poor place to work in Spring, then copy the `SpringDatastar.java`.
+Error handling is clunky, and probably should be reworked by a Spring Boot expert. So use it as a first step, and give constructive feedback.
+
+Example usage:
+```java
+@RestController
+public class HelloWorldController {
+    @GetMapping(path = "/hello-world", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public SseEmitter hello(@QueryParam("datastar") String json) {
+        SseEmitter sse = new SseEmitter();
+        SpringDatastar.send(sse, Datastar.patchElements("""
+            <div id="foo">Hello whoever</div>
+            """).replaceOuterHtml());
+        SpringDatastar.send(sse, Datastar.patchSignals("""
+            {"foo": 1, "bar": true, "baz": "solid"}
+            """).onlyIfMissing().createEvent());
+        SpringDatastar.send(sse, Datastar.executeScript().
+            .withScript("""
+            console.log('The server was here');
+            """));
+        return sse;
+    }
+}
+```
+Maybe. Refer to Spring documentation, or see the spring hello-world example.
+
+* Depends on Spring Boot ecosystem
+* Needs Jackson for Json handling for signals
+* Your favorite Spring build tool can handle the rest
 * Copy&Paste. No CD/CI or central code registries.
 * No configuration. "Just works"
 

@@ -118,8 +118,8 @@ public class Datastar {
       if (PatchElements.this.useViewTransition)
         event.append("useViewTransition true\n");
       if (this.htmlElements != null)
-        this.htmlElements.lines().filter(Predicate.not(String::isEmpty))
-            .map(line -> "elements " + line + '\n').forEach(event::append);
+        event.append(this.htmlElements.lines().filter(Predicate.not(String::isEmpty))
+            .map(line -> "elements " + line).collect(Collectors.joining("\n")));
       return new Event("datastar-patch-elements", event.toString(), null, null);
     }
   }

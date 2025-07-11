@@ -6,19 +6,22 @@ Just copy the `Datastar.java` into your project for core functionality. It allow
 
 > [!IMPORTANT]
 > The core does not contain features to handle Datastar signals.
-> This is a design choice as it would create a dependency to an external JSON library.
+> This is a design choice as it would enforce a dependency to an external JSON library.
 
 Signal parsing is delegated to the end user, as the end user is free to use any JSON library. And probably there is alredy one present on the classpath of the given framework. If not, we don't enforce a library on the end user. Maybe you don't even use signals...
 
 The same goes for session and state management.
 
-* The core is dependency free and uses only Java JDK 17 features.
+* The core is dependency free 
+* Only Java JDK 17 features
+* Single file
+* Fluent builder pattern interface
 * No build tool required
-* Copy&Paste. No CD/CI or central code registries.
+* Copy&Paste. No CD/CI or central code registries
 
 ## JAX-RS integration
 
-If you use JAX-RS according to JSR 311 (from back in 2008), and want to run your code in any Jakarta EE 10 compliant servlet container then you also copy the `JaxRsDatastar.java` and everything else will be handled by the application server like Wildfly, Jetty, Tomcat, Micronaut, Quarkus, ...
+If you use JAX-RS according to JSR 311 (from back in 2008), and want to run your code in any Jakarta EE 10 compliant servlet container then you also copy the `JaxRsDatastar.java` and everything else will be handled by the application server like Wildfly, Jetty, Tomcat, OpenLiberty, Microprofile Core, Quarkus, ...
 
 In case of Jakarta EE <10 the imports have to be backported to `javax`.
 
@@ -92,7 +95,7 @@ public class HelloWorldController {
 Maybe. Refer to Spring documentation, or see the spring hello-world example.
 
 * Depends on Spring Boot ecosystem
-* Needs Jackson for Json handling for signals
+* Needs Jackson for Json handling of signals
 * Your favorite Spring build tool can handle the rest
 * Copy&Paste. No CD/CI or central code registries.
 * No configuration. "Just works"
@@ -133,6 +136,22 @@ Example usage:
 * Copy&Paste. No CD/CI or central code registries.
 * No configuration. "Just works"
 
+
+## Javalin implementation
+
+> [!CAUTION]
+> Javalin is incompatible with Datastar unless the
+> [feature request](https://github.com/javalin/javalin/issues/2420) is implemented
+
+> [!IMPORTANT]
+> Javalin does not support SSE delay. So be adviced.
+
+**WIP** Work in progress
+
+## JHipster integration
+
+You are doing it wrong. JavaScript to run a Java application? Stop overcomplicating. Think again and use another integration. If you still can't resist, the Spring integration should work with JHipster.
+
 ## Other integrations
 
-Not implemented yet. But for example in Javalin the conversion from `Datastar.Event` to standard SSE events should be easy. Look at `VertxDatastar.java` for inspiration.
+Not implemented yet. But for example in Micronaut the conversion from `Datastar.Event` to standard SSE events should be easy. Look at `VertxDatastar.java` for inspiration.

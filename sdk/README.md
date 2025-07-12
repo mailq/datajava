@@ -136,8 +136,17 @@ Example usage:
 * Copy&Paste. No CD/CI or central code registries.
 * No configuration. "Just works"
 
+## Servlet integration
 
-## Javalin implementation
+If you you are on an old school servlet container and want to use Datastar, then copy `ServletDatastar.java`, too.
+You can use the provided `DatastarHeaderFilter` in case you want the Datastar headers applied automatically. Otherwise you have to set them with `ServletDatastar.prepareHeaders()` on every request.
+
+* Works on any servlet container
+* You have to use the Json library of your choice to read the signals
+* Copy&Paste. No CD/CI or central code registries.
+* No configuration. "Just works", if you don't forget to set the response headers.
+
+## Javalin integration
 
 > [!CAUTION]
 > Javalin is incompatible with Datastar unless the

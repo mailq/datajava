@@ -34,6 +34,18 @@ public class Datastar {
         .remove();
   }
 
+  /**
+   * You can't remove signals with this method. Use
+   * {@link Datastar#patchSignals()} and set the signals you want to be removed to
+   * <code>null</code>
+   * 
+   * @return nothing
+   */
+  @Deprecated
+  public static Void removeSignals() {
+    return null;
+  }
+
   public static ExecuteScript executeScript() {
     return new ExecuteScript();
   }

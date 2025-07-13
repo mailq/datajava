@@ -18,6 +18,8 @@ import dev.datastar.Datastar.Event;
 @Provider
 public class JaxRsDatastar implements ParamConverterProvider {
   public static void send(SseEventSink sink, Event event) {
+    if (sink.isClosed())
+      return;
     sink.send(build(event));
   }
 
@@ -32,7 +34,7 @@ public class JaxRsDatastar implements ParamConverterProvider {
     }
   }
 
-  public static OutboundSseEvent build(Event event) {
+  private static OutboundSseEvent build(Event event) {
     return new OutboundSseEvent() {
       @Override
       public boolean isReconnectDelaySet() {

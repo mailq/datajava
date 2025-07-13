@@ -19,9 +19,9 @@ The same goes for session and state management.
 * No build tool required
 * Copy&Paste. No CD/CI or central code registries
 
-## JAX-RS integration
+## Jakarta EE REST (formerly JAX-RS) integration
 
-If you use JAX-RS according to JSR 311 (from back in 2008), and want to run your code in any Jakarta EE 10 compliant servlet container then you also copy the `JaxRsDatastar.java` and everything else will be handled by the application server like Wildfly, Jetty, Tomcat, OpenLiberty, Microprofile Core, Quarkus, ...
+If you use JAX-RS according to JSR 311 (from back in 2008), and want to run your code in any Jakarta EE 10 compliant application server then you also copy the `JaxRsDatastar.java` and everything else will be handled by the application server like Wildfly, Jetty, Tomcat, OpenLiberty, TomEE, GlassFish, Payara, JBoss, Microprofile Core, Quarkus, ...
 
 In case of Jakarta EE <10 the imports have to be backported to `javax`.
 
@@ -39,7 +39,7 @@ public class HelloWorldResource {
         JaxRsDatastar.send(sse, Datastar.patchSignals("""
             {"foo": 1, "bar": true, "baz": "solid"}
             """).onlyIfMissing().createEvent());
-        JaxRsDatastar.send(sse, Datastar.executeScript().
+        JaxRsDatastar.send(sse, Datastar.executeScript()
             .withScript("""
             console.log('The server was here');
             """));
@@ -59,7 +59,7 @@ var jsonAsString = Json.createObjectBuilder()
   .build().toString()
 ```
 
-* JAX-RS compliant. Depends on compliant application server
+* Jakarta EE REST compliant. Depends on compliant application server
 * Needs JSON (JSON-B or JSON-P) support; should be already included
 * Build-in Datastar signals converter
 * No build tool required
@@ -84,7 +84,7 @@ public class HelloWorldController {
         SpringDatastar.send(sse, Datastar.patchSignals("""
             {"foo": 1, "bar": true, "baz": "solid"}
             """).onlyIfMissing().createEvent());
-        SpringDatastar.send(sse, Datastar.executeScript().
+        SpringDatastar.send(sse, Datastar.executeScript()
             .withScript("""
             console.log('The server was here');
             """));
@@ -121,7 +121,7 @@ Example usage:
             VertxDatastar.send(context.response(), Datastar.patchSignals("""
                 {"foo": 1, "bar": true, "baz": "solid"}
                 """).onlyIfMissing().createEvent());
-            VertxDatastar.send(context.response(), Datastar.executeScript().
+            VertxDatastar.send(context.response(), Datastar.executeScript()
                 .withScript("""
                 console.log('The server was here');
                 """));
@@ -146,6 +146,35 @@ You can use the provided `DatastarHeaderFilter` in case you want the Datastar he
 * Copy&Paste. No CD/CI or central code registries.
 * No configuration. "Just works", if you don't forget to set the response headers.
 
+## Micronaut integration
+In case you want to develop for Micronaut, you have to copy `MicronautDatastar.java`.
+
+Example usage:
+```java
+@Controller("/")
+public class HelloController {
+    @Get(produces = MediaType.TEXT_EVENT_STREAM, uri = "hello-world")
+    public Flux<Event<String>> hello() throws IOException {
+        return Flux.just(
+            MicronautDatastar.buildSseEvent(Datastar.patchElements("""
+                <div id="foo">Hello whoever</div>
+                """).replaceOuterHtml()),
+            MicronautDatastar.buildSseEvent(Datastar.patchSignals("""
+                {"foo": 1, "bar": true, "baz": "solid"}
+                """).onlyIfMissing().createEvent()),
+            MicronautDatastar.buildSseEvent(Datastar.executeScript()
+                .withScript("""
+                console.log('The server was here');
+                """)));
+    }
+}
+```
+
+* Depends on Micronaut reactive ecosystem
+* Json signal handling out of the box
+* Copy&Paste. No CD/CI or central code registries.
+* No configuration. "Just works"
+
 ## Javalin integration
 
 > [!CAUTION]
@@ -163,4 +192,6 @@ You are doing it wrong. JavaScript to run a Java application? Stop overcomplicat
 
 ## Other integrations
 
-Not implemented yet. But for example in Micronaut the conversion from `Datastar.Event` to standard SSE events should be easy. Look at `VertxDatastar.java` for inspiration.
+Not implemented yet. But the conversion from `Datastar.Event` to standard SSE events should be easy. Look at `VertxDatastar.java` for inspiration.
+
+Which integration is missing?

@@ -66,7 +66,7 @@ var jsonAsString = Json.createObjectBuilder()
 * Copy&Paste. No CD/CI or central code registries.
 * No configuration. "Just works"
 
-## Spring Boot integration
+## Spring Boot (MVC) integration
 
 If you are in the poor place to work in Spring, then copy the `SpringDatastar.java`.
 Error handling is clunky, and probably should be reworked by a Spring Boot expert. So use it as a first step, and give constructive feedback.
@@ -93,6 +93,38 @@ public class HelloWorldController {
 }
 ```
 Maybe. Refer to Spring documentation, or see the spring hello-world example.
+
+* Depends on Spring Boot ecosystem
+* Needs Jackson for Json handling of signals
+* Your favorite Spring build tool can handle the rest
+* Copy&Paste. No CD/CI or central code registries.
+* No configuration. "Just works"
+
+## Spring Boot (Webflux) integration
+
+If you are in the poor place of Spring, but want some reactivity, then copy the `WebfluxDatastar.java`.
+
+Example usage:
+```java
+@RestController
+@RequestMapping("/")
+public class HelloController {
+    @GetMapping("hello-world")
+    public Flux<ServerSentEvent<String>> hello() {
+        return Flux.just(
+            WebfluxDatastar.buildSseEvent(Datastar.patchElements("""
+                <div id="foo">Hello whoever</div>
+                """).replaceOuterHtml()),
+            WebfluxDatastar.buildSseEvent(Datastar.patchSignals("""
+                {"foo": 1, "bar": true, "baz": "solid"}
+                """).onlyIfMissing().createEvent()),
+            WebfluxDatastar.buildSseEvent(Datastar.executeScript()
+                .withScript("""
+                console.log('The server was here');
+                """)));
+    }
+}
+```
 
 * Depends on Spring Boot ecosystem
 * Needs Jackson for Json handling of signals

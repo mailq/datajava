@@ -38,7 +38,8 @@ public class helloworld {
         var hello = "Hello, world!";
         for (var i = 1; i <= hello.length(); i++) {
             JaxRsDatastar.send(sink, Datastar
-                    .patchElements("<h1 id=\"message\">%s</h1>".formatted(hello.substring(0, i))).replaceOuterHtml());
+                    .patchElements()
+                    .replace("<h1 id=\"message\">%s</h1>".formatted(hello.substring(0, i))));
             Thread.sleep(delay);
         }
     }

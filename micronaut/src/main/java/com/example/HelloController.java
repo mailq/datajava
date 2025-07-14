@@ -21,7 +21,7 @@ public class HelloController {
         var delay = signals.get("delay").getLongValue();
         return Flux.range(1, hello.length()).map(i -> hello.substring(0, i))
                 .map(text -> "<h1 id=\"message\">%s</h1>".formatted(text))
-                .map(element -> Datastar.patchElements(element).replaceOuterHtml())
+                .map(element -> Datastar.patchElements().replace(element))
                 .map(event -> MicronautDatastar.buildSseEvent(event))
                 .delayElements(Duration.ofMillis(delay));
     }

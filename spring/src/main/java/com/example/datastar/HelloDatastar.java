@@ -29,10 +29,10 @@ public class HelloDatastar {
         executorService.execute(() -> {
             try {
                 var hello = "Hello, world!";
-                for (int i = 0; i <= hello.length(); i++) {
+                for (int i = 1; i <= hello.length(); i++) {
                     var ok = SpringDatastar.send(emitter,
-                            Datastar.patchElements("<div id=\"message\">" + hello.substring(0, i) + "</h1>")
-                                    .replaceOuterHtml());
+                            Datastar.patchElements()
+                                    .replace("<div id=\"message\">" + hello.substring(0, i) + "</h1>"));
                     if (!ok)
                         break;
                     Thread.sleep(signals.getJsonNumber("delay").longValue());

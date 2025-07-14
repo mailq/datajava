@@ -34,9 +34,9 @@ public class helloworld {
             context.end();
             return;
         }
-        VertxDatastar.send(context.response(), Datastar.patchElements("""
+        VertxDatastar.send(context.response(), Datastar.patchElements().replace("""
                 <div id="message">%s</div>
-                """.formatted(hello.substring(0, currentStep))).replaceOuterHtml());
+                """.formatted(hello.substring(0, currentStep))));
         context.vertx().setTimer(delay, id -> {
             sendSubstring(currentStep + 1, hello, delay, context);
         });

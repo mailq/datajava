@@ -33,12 +33,12 @@ public class HelloWorldResource {
     @Produces(MediaType.SERVER_SENT_EVENTS)
     public void hello(@QueryParam("datastar") JsonObject signals,
         @Context SseEventSink sse) {
-        JaxRsDatastar.send(sse, Datastar.patchElements("""
+        JaxRsDatastar.send(sse, Datastar.patchElements().replace("""
             <div id="foo">Hello whoever</div>
             """).replaceOuterHtml());
-        JaxRsDatastar.send(sse, Datastar.patchSignals("""
+        JaxRsDatastar.send(sse, Datastar.patchSignals().onlyIfMissing().withSignals("""
             {"foo": 1, "bar": true, "baz": "solid"}
-            """).onlyIfMissing().createEvent());
+            """));
         JaxRsDatastar.send(sse, Datastar.executeScript()
             .withScript("""
             console.log('The server was here');
@@ -78,12 +78,12 @@ public class HelloWorldController {
     @GetMapping(path = "/hello-world", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter hello(@QueryParam("datastar") String json) {
         SseEmitter sse = new SseEmitter();
-        SpringDatastar.send(sse, Datastar.patchElements("""
+        SpringDatastar.send(sse, Datastar.patchElements().replace("""
             <div id="foo">Hello whoever</div>
-            """).replaceOuterHtml());
-        SpringDatastar.send(sse, Datastar.patchSignals("""
+            """));
+        SpringDatastar.send(sse, Datastar.patchSignals().onlyIfMissing().withSignals("""
             {"foo": 1, "bar": true, "baz": "solid"}
-            """).onlyIfMissing().createEvent());
+            """));
         SpringDatastar.send(sse, Datastar.executeScript()
             .withScript("""
             console.log('The server was here');
@@ -112,12 +112,12 @@ public class HelloController {
     @GetMapping("hello-world")
     public Flux<ServerSentEvent<String>> hello() {
         return Flux.just(
-            WebfluxDatastar.buildSseEvent(Datastar.patchElements("""
+            WebfluxDatastar.buildSseEvent(Datastar.patchElements().replace("""
                 <div id="foo">Hello whoever</div>
-                """).replaceOuterHtml()),
-            WebfluxDatastar.buildSseEvent(Datastar.patchSignals("""
+                """)),
+            WebfluxDatastar.buildSseEvent(Datastar.patchSignals().onlyIfMissint().withSignals("""
                 {"foo": 1, "bar": true, "baz": "solid"}
-                """).onlyIfMissing().createEvent()),
+                """)),
             WebfluxDatastar.buildSseEvent(Datastar.executeScript()
                 .withScript("""
                 console.log('The server was here');
@@ -147,12 +147,12 @@ Example usage:
             var delay = signals.getLong("delay").longValue();
 
             VertxDatastar.prepareResponse(context.response());
-            VertxDatastar.send(context.response(), Datastar.patchElements("""
+            VertxDatastar.send(context.response(), Datastar.patchElements().replace("""
                 <div id="foo">Hello whoever</div>
-                """).replaceOuterHtml());
-            VertxDatastar.send(context.response(), Datastar.patchSignals("""
+                """));
+            VertxDatastar.send(context.response(), Datastar.patchSignals().onlyIfMissing().withSignals("""
                 {"foo": 1, "bar": true, "baz": "solid"}
-                """).onlyIfMissing().createEvent());
+                """));
             VertxDatastar.send(context.response(), Datastar.executeScript()
                 .withScript("""
                 console.log('The server was here');
@@ -188,12 +188,12 @@ public class HelloController {
     @Get(produces = MediaType.TEXT_EVENT_STREAM, uri = "hello-world")
     public Flux<Event<String>> hello() throws IOException {
         return Flux.just(
-            MicronautDatastar.buildSseEvent(Datastar.patchElements("""
+            MicronautDatastar.buildSseEvent(Datastar.patchElements().replace("""
                 <div id="foo">Hello whoever</div>
-                """).replaceOuterHtml()),
-            MicronautDatastar.buildSseEvent(Datastar.patchSignals("""
+                """)),
+            MicronautDatastar.buildSseEvent(Datastar.patchSignals().onlyIfMissing().withSignals("""
                 {"foo": 1, "bar": true, "baz": "solid"}
-                """).onlyIfMissing().createEvent()),
+                """)),
             MicronautDatastar.buildSseEvent(Datastar.executeScript()
                 .withScript("""
                 console.log('The server was here');
@@ -225,5 +225,7 @@ You are doing it wrong. JavaScript to run a Java application? Stop overcomplicat
 ## Other integrations
 
 Not implemented yet. But the conversion from `Datastar.Event` to standard SSE events should be easy. Look at `VertxDatastar.java` for inspiration.
+
+If you prefer Kotlin and Ktor, or Scala with Alpakka, or Groovy with Grails then you have to implement the conversion on your own (PRs welcome).
 
 Which integration is missing?

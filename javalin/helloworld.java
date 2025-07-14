@@ -16,7 +16,7 @@ import io.javalin.http.staticfiles.Location;
 import io.javalin.json.JavalinJackson;
 
 public class helloworld {
-    // This code should work, but not tested as is not compatible with Datastar
+    // This code should work, but not tested as it is not compatible with Datastar
     // REASON: https://github.com/javalin/javalin/issues/2420
     public static void main(String[] args) {
         Javalin.create(
@@ -29,9 +29,10 @@ public class helloworld {
                         var delay = signals.get("delay").asLong();
                         var hello = "Hello, world!";
                         for (int i = 1; i <= hello.length(); i++) {
-                            JavalinDatastar.send(context, Datastar.patchElements("""
+                            JavalinDatastar.send(context, Datastar.patchElements()
+                                    .replace("""
                                     <div id="message">%s</div>
-                                    """.formatted(hello.substring(0, i))).replaceOuterHtml());
+                                    """.formatted(hello.substring(0, i))));
                             try {
                                 Thread.sleep(delay);
                             } catch (InterruptedException e) {

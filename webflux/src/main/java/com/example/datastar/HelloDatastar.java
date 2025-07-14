@@ -30,7 +30,7 @@ public class HelloDatastar {
         var delay = signals.getJsonNumber("delay").longValue();
         return Flux.range(1, hello.length()).map(i -> hello.substring(0, i))
                 .map(text -> "<h1 id=\"message\">%s</h1>".formatted(text))
-                .map(element -> Datastar.patchElements(element).replaceOuterHtml())
+                .map(element -> Datastar.patchElements().replace(element))
                 .map(event -> WebfluxDatastar.buildSseEvent(event))
                 .delayElements(Duration.ofMillis(delay));
     }

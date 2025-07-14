@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Datastar {
   public record Event(String name, String data, String id, Long reconnectDelay) {
@@ -21,16 +22,21 @@ public class Datastar {
   Datastar() {
   }
 
-  public static PatchElements patchElements(String htmlElements) {
-    return new PatchElements(htmlElements);
+  public static PatchElements patchElements() {
+    return new PatchElements();
   }
 
-  public static PatchSignals patchSignals(String signalsAsJson) {
-    return new PatchSignals(signalsAsJson);
+  public static PatchSignals patchSignals() {
+    return new PatchSignals();
   }
 
   public static Event removeElements(Collection<String> selectors) {
-    return new PatchElements("").select(selectors.stream().collect(Collectors.joining(" ")))
+    return new PatchElements().select(selectors.stream().collect(Collectors.joining(" ")))
+        .remove();
+  }
+
+  public static Event removeElements(String... selectors) {
+    return new PatchElements().select(Stream.of(selectors).collect(Collectors.joining(" ")))
         .remove();
   }
 
@@ -54,13 +60,11 @@ public class Datastar {
    * Don't use this class. Use {@link Datastar#patchElements()} instead
    */
   public static class PatchElements {
-    private final String htmlElements;
     private String selector;
     private boolean useViewTransition;
     private String mode;
 
-    PatchElements(String htmlFragments) {
-      this.htmlElements = htmlFragments;
+    PatchElements() {
     }
 
     /** the target as CSS selector */
@@ -74,63 +78,63 @@ public class Datastar {
       return this;
     }
 
-    /** of target element and preserve state */
-    public Event replaceOuterHtml() {
-      return createEvent();
+    /** outer of target element and preserve state */
+    public Event replace(String htmlElements) {
+      return createEvent(htmlElements);
     }
 
     /** of the target element */
-    public Event replaceInnerHtml() {
+    public Event replaceInnerHtml(String htmlElements) {
       this.mode = "inner";
-      return createEvent();
+      return createEvent(htmlElements);
     }
 
     /** of target element and reset state */
-    public Event replaceHtml() {
+    public Event replaceAndReset(String htmlElements) {
       this.mode = "replace";
-      return createEvent();
+      return createEvent(htmlElements);
     }
 
     /** of the target's first child as sibling */
-    public Event prependToChildren() {
+    public Event prependToChildren(String htmlElements) {
       this.mode = "prepend";
-      return createEvent();
+      return createEvent(htmlElements);
     }
 
     /** of the target's last child as sibling */
-    public Event appendToChildren() {
+    public Event appendToChildren(String htmlElements) {
       this.mode = "append";
-      return createEvent();
+      return createEvent(htmlElements);
     }
 
     /** of the target as sibling */
-    public Event beforeSelector() {
+    public Event beforeSelector(String htmlElements) {
       this.mode = "before";
-      return createEvent();
+      return createEvent(htmlElements);
     }
 
     /** of the target as sibling */
-    public Event afterSelector() {
+    public Event afterSelector(String htmlElements) {
       this.mode = "after";
-      return createEvent();
+      return createEvent(htmlElements);
     }
 
     /** the target itself and children */
     public Event remove() {
       this.mode = "remove";
-      return createEvent();
+      return createEvent(null);
     }
 
-    private Event createEvent() {
+    private Event createEvent(String htmlElements) {
       var event = new StringBuilder();
-      if (PatchElements.this.selector != null)
-        event.append("selector ").append(PatchElements.this.selector).append('\n');
-      if (PatchElements.this.mode != null)
-        event.append("mode ").append(PatchElements.this.mode).append('\n');
-      if (PatchElements.this.useViewTransition)
+      if (this.selector != null)
+        event.append("selector ").append(this.selector).append('\n');
+      if (this.mode != null)
+        event.append("mode ").append(this.mode).append('\n');
+      if (this.useViewTransition)
         event.append("useViewTransition true\n");
-      if (this.htmlElements != null)
-        event.append(this.htmlElements.lines().filter(Predicate.not(String::isEmpty))
+      if (htmlElements != null)
+        event.append(htmlElements.lines().filter(Predicate.not(String::isEmpty))
             .map(line -> "elements " + line).collect(Collectors.joining("\n")));
       return new Event("datastar-patch-elements", event.toString(), null, null);
     }
@@ -140,11 +144,9 @@ public class Datastar {
    * Don't use this class. Use {@link Datastar#patchSignals()} instead
    */
   public static final class PatchSignals {
-    private final String signalsAsJson;
     private boolean onlyIfMissing;
 
-    PatchSignals(String signalsAsJson) {
-      this.signalsAsJson = signalsAsJson;
+    PatchSignals() {
     }
 
     /** when not already defined on the client */
@@ -153,11 +155,11 @@ public class Datastar {
       return this;
     }
 
-    public Event createEvent() {
+    public Event withSignals(String signalsAsJson) {
       var event = new StringBuilder();
       if (this.onlyIfMissing)
         event.append("onlyIfMissing true\n");
-      this.signalsAsJson.lines().filter(Predicate.not(String::isEmpty))
+      signalsAsJson.lines().filter(Predicate.not(String::isEmpty))
           .map(line -> "signals " + line + '\n').forEach(event::append);
       return new Event("datastar-patch-signals", event.toString(), null, null);
     }
@@ -201,7 +203,7 @@ public class Datastar {
           .map(entry -> entry.getKey() + "=\"" + entry.getValue() + "\"")
           .forEach(attribute -> script.append(' ').append(attribute));
       script.append(">").append(javaScript).append("</script>");
-      return new PatchElements(script.toString()).select("body").appendToChildren();
+      return new PatchElements().select("body").appendToChildren(script.toString());
     }
   }
 }

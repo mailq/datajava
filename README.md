@@ -7,7 +7,7 @@ as it lacks the Datastar signal handling. See below for the reasoning.
 ## Implementation goals
 
 * No build tool (Maven, Gradle, ant, SBT, ivy, bld, ...) required.
-* No dependency, only Java SDK/JRE
+* No dependency, only Java JDK/JRE
 * Specializations for HTTP servers
 * Single file for easy copying
 * Fluent builders

@@ -3,7 +3,7 @@
 > [!CAUTION]
 > Never ever use this code in production!
 
-This is a broken(!!) Datastar 🚀 backend that has absolutely **no dependency** beside the default Java JDK 21+.
+This is an intentionally broken(!!) Datastar 🚀 backend that has absolutely **no dependency** beside the default Java JDK 21+.
 
 😎 But at least the Hello World example is functional 😎.
 

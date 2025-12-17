@@ -63,6 +63,7 @@ public class Datastar {
     private String selector;
     private boolean useViewTransition;
     private String mode;
+    private String namespace;
 
     PatchElements() {
     }
@@ -75,6 +76,26 @@ public class Datastar {
 
     public PatchElements useViewTransition() {
       this.useViewTransition = true;
+      return this;
+    }
+
+    /**
+     * interpret the elements as SVG elements within the SVG namespace.
+     * 
+     * Can't be mixed with elements from other namespaces.
+     */
+    public PatchElements asSVG() {
+      this.namespace = "svg";
+      return this;
+    }
+
+    /**
+     * interpret the elements as MathML elements within the MathML namespace.
+     * 
+     * Can't be mixed with elements from other namespaces.
+     */
+    public PatchElements asMathML() {
+      this.namespace = "mathml";
       return this;
     }
 
@@ -133,6 +154,8 @@ public class Datastar {
         event.append("mode ").append(this.mode).append('\n');
       if (this.useViewTransition)
         event.append("useViewTransition true\n");
+      if (this.namespace != null)
+        event.append("namespace ").append(this.namespace).append('\n');
       if (htmlElements != null)
         event.append(htmlElements.lines().filter(Predicate.not(String::isEmpty))
             .map(line -> "elements " + line).collect(Collectors.joining("\n")));

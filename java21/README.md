@@ -20,3 +20,10 @@ then run the compiled code
 ```bash
 java nodependency
 ```
+## Run it on 25
+
+With Java JDK 25+ it is even easier, without having to compile it first:
+
+```bash
+java nodependency.java
+```

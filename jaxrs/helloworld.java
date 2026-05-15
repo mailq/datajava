@@ -1,6 +1,6 @@
 //usr/bin/env jbang "$0" "$@" ; exit $?
 //SOURCES dev/datastar/*.java
-//DEPS io.quarkus.platform:quarkus-bom:3.24.2@pom
+//DEPS io.quarkus.platform:quarkus-bom:3.35.3@pom
 //DEPS io.quarkus:quarkus-rest
 //JAVAC_OPTIONS -parameters
 //JAVA_OPTIONS -Djava.util.logging.manager=org.jboss.logmanager.LogManager

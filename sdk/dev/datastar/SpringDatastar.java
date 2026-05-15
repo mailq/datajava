@@ -1,7 +1,6 @@
 package dev.datastar;
 
 import java.io.IOException;
-import java.io.StringReader;
 
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -9,13 +8,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.fasterxml.jackson.datatype.jsonp.JSONPModule;
 
 import dev.datastar.Datastar.Event;
-import jakarta.json.Json;
-import jakarta.json.JsonException;
-import jakarta.json.JsonObject;
 
 public class SpringDatastar {
     public static boolean send(SseEmitter emitter, Event event) {
@@ -41,6 +35,7 @@ public class SpringDatastar {
         return ok;
     }
 
+    /* Alternative
     public static JsonObject readSignals(String signals) {
         // Needs com.fasterxml.jackson.datatype:jackson-datatype-jakarta-jsonp
         // and org.glassfish:jakarta.json
@@ -51,15 +46,18 @@ public class SpringDatastar {
             throw new JsonException(e.getMessage(), e);
         }
     }
+    */
 
-    public static JsonObject readSignals2(String signals) {
+    /* Alternative
+    public static JsonObject readSignals(String signals) {
         // Just needs org.glassfish:jakarta.json
         try (var reader = Json.createReader(new StringReader(signals))) {
             return reader.readObject();
         }
     }
+    */
 
-    public static JsonNode readSignals3(String signals) throws JsonMappingException, JsonProcessingException {
+    public static JsonNode readSignals(String signals) throws JsonMappingException, JsonProcessingException {
         // Needs only Jackson, which is present in Spring
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readTree(signals);

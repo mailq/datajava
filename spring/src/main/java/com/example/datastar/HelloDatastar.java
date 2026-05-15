@@ -35,7 +35,7 @@ public class HelloDatastar {
                                     .replace("<div id=\"message\">" + hello.substring(0, i) + "</h1>"));
                     if (!ok)
                         break;
-                    Thread.sleep(signals.getJsonNumber("delay").longValue());
+                    Thread.sleep(signals.get("delay").longValue());
                 }
                 emitter.complete();
             } catch (InterruptedException e) {

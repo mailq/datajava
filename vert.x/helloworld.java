@@ -1,6 +1,6 @@
 //usr/bin/env jbang "$0" "$@" ; exit $?
 //SOURCES dev/datastar/*.java
-//DEPS io.vertx:vertx-web:5.0.1
+//DEPS io.vertx:vertx-web:5.0.12
 //JAVAC_OPTIONS -parameters
 
 import dev.datastar.Datastar;

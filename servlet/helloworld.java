@@ -1,7 +1,8 @@
 //usr/bin/env jbang "$0" "$@" ; exit $?
 //SOURCES dev/datastar/*.java
-//DEPS org.eclipse.jetty.ee10:jetty-ee10-servlet:12.0.23
+//DEPS org.eclipse.jetty.ee10:jetty-ee10-servlet:12.1.9
 //DEPS org.glassfish:jakarta.json:2.0.1
+//DEPS org.slf4j:slf4j-simple:2.0.18
 //JAVAC_OPTIONS -parameters
 
 import java.io.IOException;

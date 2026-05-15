@@ -209,14 +209,36 @@ public class HelloController {
 
 ## Javalin integration
 
-> [!CAUTION]
-> Javalin is incompatible with Datastar unless the
-> [feature request](https://github.com/javalin/javalin/issues/2420) is implemented
+If you use Javalin, then copy the `JavalinDatastar.java`, too.
 
-> [!IMPORTANT]
+Example usage:
+```java
+config.routes.sse("/hello-world", sse -> {
+    try (sse) {
+        JavalinDatastar.send(sse, Datastar.patchElements().replace("""
+            <div id="foo">Hello whoever</div>
+            """));
+        JavalinDatastar.send(sse, Datastar.patchSignals().onlyIfMissing().withSignals("""
+            {"foo": 1, "bar": true, "baz": "solid"}
+            """));
+        JavalinDatastar.send(sse, Datastar.executeScript()
+            .withScript("""
+            console.log('The server was here');
+            """));
+    }
+});
+```
+
+* Depends on Javalin 7+ ecosystem
+* Json signal handling out of the box via Jackson
+* Copy&Paste. No CD/CI or central code registries.
+* No configuration. "Just works"
+
+> [!TIP]
 > Javalin does not support SSE delay. So be adviced.
 
-**WIP** Work in progress
+> [!NOTE]
+> Javalin version 6 and older is incompatible with Datastar due to Javalin issue #2420
 
 ## JHipster integration
 
